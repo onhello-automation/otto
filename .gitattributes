@@ -3,6 +3,7 @@
 
 # Python
 *.py text eol=lf
+*.ipynb text eol=lf
 
 # Miscellaneous
 *.lock text eol=lf
