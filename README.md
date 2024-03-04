@@ -1,2 +1,2 @@
 # otto
-Control PC
+Control your PC.

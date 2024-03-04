@@ -5,6 +5,7 @@
 *.py text eol=lf
 
 # Miscellaneous
+*.lock text eol=lf
 *.md text eol=lf
 *.sh text eol=lf
 *.txt text eol=lf
