@@ -1,7 +1,12 @@
 # otto
-Control your PC.
+Help AI control your PC.
+
+This might only work on Windows because we use `pywinauto` to control applications.
+It might work on Linux too.
 
 # Setup
+See the steps below to setup this project.
+
 ## Setup Python
 Use Python 3.11.
 Example:
