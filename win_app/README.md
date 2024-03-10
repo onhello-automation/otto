@@ -35,3 +35,23 @@ See [here](https://python-poetry.org/docs/main).
 ```shell
 poetry install
 ```
+
+# Running
+Make sure the environment is activated.
+For example, if you are using Conda:
+```shell
+conda activate otto
+```
+
+## Running the Main Script
+Git Bash Example:
+```bash
+OTTO_LOG_LEVEL=INFO PYTHONPATH="${PWD};${PYTHONPATH}" python otto/main.py
+```
+
+PowerShell Example:
+```powershell
+$env:OTTO_LOG_LEVEL="INFO"
+$env:PYTHONPATH="${PWD};${env:PYTHONPATH}"
+python otto\main.py
+```
