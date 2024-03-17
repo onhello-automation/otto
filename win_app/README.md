@@ -5,13 +5,16 @@ This might only work on Windows because we use `pywinauto` to control applicatio
 It might work on Linux too.
 
 # Plans
+## RAG
+- Support providing a folder of documents for context.
+
 ## Decision Making
-- Use LLM to decide what to do. Start with Ollama. Make a generic connector interface so that other options can be used too.
+- Use LLM to decide what to do. Start with Ollama + SK. Make a generic connector interface so that other options can be used too.
 
 ## Actions
 ### Teams
 - ✅ Support writing a message in a Teams chat.
-- Get the latest message in a Teams chat for context to LLM.
+- Get the latest messages in a Teams chat for context to LLM.
 
 ### Code
 - Support editing code in VS Code.
