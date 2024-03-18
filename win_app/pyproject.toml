@@ -6,11 +6,13 @@ authors = ["Justin D. Harris <juharris@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-pywinauto = "^0.6.8"
-injector = "^0.21.0"
-pyyaml = "^6.0.1"
+# Strict python version to work with 'semantic-kernel' which requires '>=3.8,<3.13'.
+python = ">=3.11,<3.13"
 dacite = "^1.8.1"
+injector = "^0.21.0"
+pywinauto = "^0.6.8"
+pyyaml = "^6.0.1"
+semantic-kernel = "^0.9.3b1"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.1.0"
