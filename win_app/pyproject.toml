@@ -12,6 +12,17 @@ injector = "^0.21.0"
 pyyaml = "^6.0.1"
 dacite = "^1.8.1"
 
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.autopep8]
+max_line_length = 140
+# W191: "indentation contains tabs". We want tabs.
+ignore = "W191"
+in-place = true
+recursive = true
+aggressive = 3

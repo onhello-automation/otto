@@ -58,3 +58,11 @@ $env:OTTO_LOG_LEVEL="INFO"
 $env:PYTHONPATH="${PWD};${env:PYTHONPATH}"
 python otto\main.py
 ```
+
+# Linting
+The rules are configuration in [pyproject.toml](pyproject.toml).
+
+Run:
+```shell
+autopep8 .
+```

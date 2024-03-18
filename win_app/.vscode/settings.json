@@ -1,7 +1,7 @@
 {
-    "python.analysis.typeCheckingMode": "basic",
-    "[python]": {
-        "editor.detectIndentation" : false,
-        "editor.insertSpaces": false
-      }
+	"python.analysis.typeCheckingMode": "basic",
+	"[python]": {
+		"editor.detectIndentation": false,
+		"editor.insertSpaces": false
+	}
 }

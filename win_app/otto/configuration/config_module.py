@@ -18,4 +18,8 @@ class ConfigModule(Module):
 		with open(self._path, 'r', encoding='utf-8') as f:
 			config = safe_load(f)
 		result = from_dict(Config, config)
+
+		if result.log_level is not None:
+			logger.setLevel(result.log_level)
+
 		return result

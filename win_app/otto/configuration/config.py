@@ -3,4 +3,4 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-	pass
+	log_level: str | int | None
