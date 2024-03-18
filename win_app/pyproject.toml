@@ -12,7 +12,6 @@ dacite = "^1.8.1"
 injector = "^0.21.0"
 pywinauto = "^0.6.8"
 pyyaml = "^6.0.1"
-qdrant-client = "^1.8.0"
 semantic-kernel = "^0.9.3b1"
 
 [tool.poetry.group.dev.dependencies]
