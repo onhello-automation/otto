@@ -1,3 +1,4 @@
+import logging
 import semantic_kernel as sk
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import \
 	OllamaTextPromptExecutionSettings
@@ -26,29 +27,6 @@ QUESTION = "Tell me what sports I should do this weekend based on what I like to
 # https://github.com/microsoft/semantic-kernel/blob/main/python/tests/unit/connectors/ollama/services/test_ollama_chat_completion.py
 #
 
-# Need patch for OllamaTextEmbedding.generate_embeddings:
-'''
-        result = []
-        for text in texts:
-            async with AsyncSession(self.session) as session:
-                async with session.post(
-                    self.url,
-                    json={"model": self.ai_model_id, "prompt": text, "options": kwargs},
-                ) as response:
-                    response.raise_for_status()
-                    response = await response.json()
-                    result.append(response['embedding'])
-        return array(result)
-'''
-
-# Need patch for OllamaTextCompletion.complete:
-"""
-                response.raise_for_status()
-                inner_content = await response.json()
-                text = inner_content['response']
-                return [TextContent(inner_content=inner_content, ai_model_id=self.ai_model_id, text=text)]
-"""
-
 
 async def main():
 	# TODO Get from config.
@@ -59,6 +37,7 @@ async def main():
 	# vector_size = 384
 	# embedding_model = 'all-minilm'
 	kernel = sk.Kernel()
+	logging.basicConfig(level=logging.DEBUG)
 
 	service_id = 'ollama_text_completion'
 	text_service = OllamaTextCompletion(ai_model_id=model, service_id=service_id)
@@ -96,8 +75,7 @@ Context: {{recall $input}}
 User: {{$input}}
 """.strip()
 
-	settings = OllamaTextPromptExecutionSettings(ai_model_id=model, service_id=service_id)
-	command = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt, prompt_execution_settings=settings)
+	command = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt)
 
 	arguments = sk.KernelArguments(input=QUESTION)
 	arguments[TextMemoryPlugin.RELEVANCE_PARAM] = 0.5
@@ -107,7 +85,7 @@ User: {{$input}}
 	assert isinstance(invocation_response, FunctionResult)
 	response = invocation_response.value[0]
 	assert isinstance(response, TextContent)
-	print(response.text)
+	print(f"response: \"{response.text}\"")
 
 
 if __name__ == "__main__":

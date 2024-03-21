@@ -1878,13 +1878,13 @@ test = ["asv", "gmpy2", "hypothesis", "mpmath", "pooch", "pytest", "pytest-cov",
 
 [[package]]
 name = "semantic-kernel"
-version = "0.9.3b1"
+version = "0.9.4b1"
 description = "Semantic Kernel Python SDK"
 optional = false
-python-versions = ">=3.8,<3.13"
+python-versions = "<3.13,>=3.8"
 files = [
-    {file = "semantic_kernel-0.9.3b1-py3-none-any.whl", hash = "sha256:7b31745d7a42139c4c33e9919cabd931d709f63724c3c816022de1d4fbc324b1"},
-    {file = "semantic_kernel-0.9.3b1.tar.gz", hash = "sha256:b7010c11419de6a9cdd7b08f301c3fd6ac7ec816c8bd06fe56481ba16d6d53a6"},
+    {file = "semantic_kernel-0.9.4b1-py3-none-any.whl", hash = "sha256:d0183fb6834d9fc8c02450f726ade08a96e1824a85178ee673d49700ec54150b"},
+    {file = "semantic_kernel-0.9.4b1.tar.gz", hash = "sha256:1579165012b461778f5a76bb71806eee1640d2157f39630d1c1c5cbe25ccab3f"},
 ]
 
 [package.dependencies]
