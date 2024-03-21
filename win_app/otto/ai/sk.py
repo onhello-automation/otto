@@ -1,15 +1,14 @@
 import logging
+import sys
+
 import semantic_kernel as sk
-from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import \
-	OllamaTextPromptExecutionSettings
 from semantic_kernel.connectors.ai.ollama.services.ollama_text_completion import \
 	OllamaTextCompletion
 from semantic_kernel.connectors.ai.ollama.services.ollama_text_embedding import \
 	OllamaTextEmbedding
-from semantic_kernel.contents import TextContent
 from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
-from semantic_kernel.functions import FunctionResult
 from semantic_kernel.memory.semantic_text_memory import SemanticTextMemory
+from semantic_kernel.contents import StreamingTextContent
 
 
 COLLECTION_NAME = 'generic'
@@ -75,18 +74,19 @@ Context: {{recall $input}}
 User: {{$input}}
 """.strip()
 
+
 	command = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt)
 
 	arguments = sk.KernelArguments(input=QUESTION)
 	arguments[TextMemoryPlugin.RELEVANCE_PARAM] = 0.5
-
-	print("Invoking kernel.")
-	invocation_response = await kernel.invoke(command, arguments=arguments)
-	assert isinstance(invocation_response, FunctionResult)
-	response = invocation_response.value[0]
-	assert isinstance(response, TextContent)
-	print(f"response: \"{response.text}\"")
-
+	print("Invoking kernel. Response:")
+	async for results in kernel.invoke_stream(command, arguments=arguments):
+		for r in results:
+			assert isinstance(r, StreamingTextContent)
+			print(r.text, end="")
+			sys.stdout.flush()
+	print()
+	
 
 if __name__ == "__main__":
 	import asyncio
