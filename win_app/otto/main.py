@@ -4,7 +4,7 @@ from injector import Injector
 
 from otto.configuration import ConfigModule
 from otto.listen.listener import OttoListener
-from otto.logging import LoggingModule
+from otto.logger import LoggingModule
 
 
 def main():

@@ -46,17 +46,22 @@ For example, if you are using Conda:
 conda activate otto
 ```
 
+## Create a configuration file
+See the sample configuration file [here](./sample_config.yaml).
+
+Make a copy of the sample configuration file and update it with the settings that you would like to use.
+
 ## Running the Main Script
 Git Bash Example:
 ```bash
-OTTO_LOG_LEVEL=INFO PYTHONPATH="${PWD};${PYTHONPATH}" python otto/main.py
+OTTO_LOG_LEVEL=INFO PYTHONPATH="${PWD};${PYTHONPATH}" python otto/main.py ~/otto/config.yaml
 ```
 
 PowerShell Example:
 ```powershell
 $env:OTTO_LOG_LEVEL="INFO"
 $env:PYTHONPATH="${PWD};${env:PYTHONPATH}"
-python otto\main.py
+python otto\main.py ${env:USERPROFILE}\otto\config.yaml
 ```
 
 # Linting

@@ -4,7 +4,9 @@ from typing import Optional
 
 from injector import inject
 from pywinauto.win32_hooks import Hook, KeyboardEvent, MouseEvent
-
+from pywinauto import Application
+from pywinauto import Desktop
+import time
 
 @inject
 @dataclass
@@ -17,7 +19,35 @@ class OttoListener:
 		self._logger.info("Listening for events. Presse Esc anytime with any window open to exit.")
 		self._hook = Hook()
 		self._hook.handler = self._keyboard_handler  # type: ignore
-		self._hook.hook(keyboard=True)
+
+		# Start a new thread.
+		# self._hook.hook(keyboard=True)
+
+		while True:
+			print("*******************")
+
+			# Get the active window
+			desktop = Desktop(backend='uia')
+
+			active_windows = desktop.windows(active_only=True)
+			if not active_windows:
+				# Doesn't find the window when the Start Menu or Task Manager is open.
+				print("No active windows.")
+				time.sleep(1)
+				continue
+			active_window = active_windows[0]
+			print("Active Window:")
+			print(active_window.window_text())
+			assert active_window.is_active()
+			
+			# Alternative way, but there are multiple `window_text`s in Windows Explorer.
+			# app = Application(backend='uia')
+			# active_app = app.connect(active_only=True)
+			# window = active_app.window()
+			# assert window.is_active()
+
+
+			time.sleep(1)
 
 	def _keyboard_handler(self, event: KeyboardEvent | MouseEvent) -> None:
 		assert isinstance(event, KeyboardEvent), \
