@@ -7,6 +7,10 @@ from pywinauto.win32_hooks import Hook, KeyboardEvent, MouseEvent
 from pywinauto import Application
 from pywinauto import Desktop
 import time
+import threading
+
+from otto.context.window import WindowInfo
+
 
 @inject
 @dataclass
@@ -20,34 +24,46 @@ class OttoListener:
 		self._hook = Hook()
 		self._hook.handler = self._keyboard_handler  # type: ignore
 
-		# Start a new thread.
-		# self._hook.hook(keyboard=True)
+		# Start hook in a new thread so that it doesn't block.
+		# Was `self._hook.hook(keyboard=True)`.
+		thread = threading.Thread(target=self._hook.hook, kwargs={'keyboard': True})
+		thread.start()
 
 		while True:
-			print("*******************")
-
-			# Get the active window
-			desktop = Desktop(backend='uia')
-
-			active_windows = desktop.windows(active_only=True)
-			if not active_windows:
-				# Doesn't find the window when the Start Menu or Task Manager is open.
-				print("No active windows.")
-				time.sleep(1)
-				continue
-			active_window = active_windows[0]
-			print("Active Window:")
-			print(active_window.window_text())
-			assert active_window.is_active()
-			
-			# Alternative way, but there are multiple `window_text`s in Windows Explorer.
-			# app = Application(backend='uia')
-			# active_app = app.connect(active_only=True)
-			# window = active_app.window()
-			# assert window.is_active()
-
+			try:
+				self._get_active_window_info()
+			except Exception as e:
+				self._logger.error("Error: %s", e)
+				break
 
 			time.sleep(1)
+
+		thread.join()
+
+	def _get_active_window_info(self) -> Optional[WindowInfo]:
+		desktop = Desktop(backend='uia')
+
+		active_windows = desktop.windows(active_only=True)
+		if not active_windows:
+			# Doesn't find the window when the Start Menu or Task Manager is open.
+			self._logger.debug("No active windows.")
+			return None
+		active_window = active_windows[0]
+		assert active_window.is_active()
+		window_title = active_window.window_text()
+		self._logger.info("Active window title: \"%s\"", window_title)
+		result = WindowInfo(
+                    title=window_title
+                )
+		self._logger.debug("Active window: \"%s\"", result)
+
+		# Alternative way, but there are multiple `window_text`s in Windows Explorer.
+		# app = Application(backend='uia')
+		# active_app = app.connect(active_only=True)
+		# window = active_app.window()
+		# assert window.is_active()
+
+		return result
 
 	def _keyboard_handler(self, event: KeyboardEvent | MouseEvent) -> None:
 		assert isinstance(event, KeyboardEvent), \
@@ -59,5 +75,6 @@ class OttoListener:
 		if event.current_key == 'Escape' and event.event_type == 'key down':
 			self._logger.info("Exiting because '%s' was pressed", event.current_key)
 			if self._hook is not None:
+				# TODO Stop the listening loop too.
 				self._hook.stop()
 				self._hook = None
