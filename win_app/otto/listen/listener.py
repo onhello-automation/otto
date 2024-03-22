@@ -20,25 +20,25 @@ class OttoListener:
 
 	def listen(self):
 		# TODO Maybe maybe it something more obscure like Shift+Esc?
-		self._logger.info("Listening for events. Presse Esc anytime with any window open to exit.")
+		self._logger.info("Listening for events. Press Esc anytime with any window open to exit.")
 		self._hook = Hook()
 		self._hook.handler = self._keyboard_handler  # type: ignore
 
 		# Start hook in a new thread so that it doesn't block.
 		# Was `self._hook.hook(keyboard=True)`.
-		thread = threading.Thread(target=self._hook.hook, kwargs={'keyboard': True})
-		thread.start()
+		# thread = threading.Thread(target=self._hook.hook, kwargs={'keyboard': True})
+		# thread.start()
 
 		while True:
 			try:
-				self._get_active_window_info()
+				active_window = self._get_active_window_info()
 			except Exception as e:
 				self._logger.error("Error: %s", e)
 				break
 
 			time.sleep(1)
 
-		thread.join()
+		# thread.join()
 
 	def _get_active_window_info(self) -> Optional[WindowInfo]:
 		desktop = Desktop(backend='uia')
@@ -52,9 +52,15 @@ class OttoListener:
 		assert active_window.is_active()
 		window_title = active_window.window_text()
 		self._logger.info("Active window title: \"%s\"", window_title)
+		# TODO Get more information about the windows like text they're entering in input fields.
+		# TODO Figure more ways to get input elements.
+		input_elements = active_window.descendants(control_type='Edit')
+		for i in input_elements:
+			self._logger.info("Input element: %s", i)
 		result = WindowInfo(
                     title=window_title
                 )
+
 		self._logger.debug("Active window: \"%s\"", result)
 
 		# Alternative way, but there are multiple `window_text`s in Windows Explorer.
