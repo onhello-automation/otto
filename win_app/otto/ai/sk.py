@@ -67,13 +67,12 @@ async def main():
 		print(r.relevance, r.text)
 
 	prompt = """
-Tell the user what they should do.
+Tell the user what they should do in one or two short sentences.
 
 Context: {{recall $input}}
 
 User: {{$input}}
 """.strip()
-
 
 	command = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt)
 
@@ -86,7 +85,7 @@ User: {{$input}}
 			print(r.text, end="")
 			sys.stdout.flush()
 	print()
-	
+
 
 if __name__ == "__main__":
 	import asyncio

@@ -62,7 +62,12 @@ python otto\main.py
 # Linting
 The rules are configuration in [pyproject.toml](pyproject.toml).
 
-Run:
+To see the changes, run:
 ```shell
-autopep8 .
+autopep8 --jobs 0 --exit-code .
+```
+
+To make the changes automatically, run:
+```shell
+autopep8 --jobs 0 --in-place .
 ```
