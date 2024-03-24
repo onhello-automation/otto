@@ -1,3 +1,10 @@
 [*.py]
 indent_style = tab
 trim_trailing_whitespace = true
+
+[*.json]
+indent_style = tab
+trim_trailing_whitespace = true
+
+[*.yaml]
+trim_trailing_whitespace = true

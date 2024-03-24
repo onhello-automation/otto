@@ -32,6 +32,9 @@ class OttoListener:
 		while True:
 			try:
 				active_window = self._get_active_window_info()
+				if active_window is not None:
+					# TODO
+					pass
 			except Exception as e:
 				self._logger.error("Error: %s", e)
 				break
@@ -43,20 +46,33 @@ class OttoListener:
 	def _get_active_window_info(self) -> Optional[WindowInfo]:
 		desktop = Desktop(backend='uia')
 
-		active_windows = desktop.windows(active_only=True)
-		if not active_windows:
-			# Doesn't find the window when the Start Menu or Task Manager is open.
+		active_window = desktop.window(active_only=True)
+		if not active_window.exists():
+			# This can happen when the Start Menu or Task Manager is open.
 			self._logger.debug("No active windows.")
 			return None
-		active_window = active_windows[0]
+		# active_windows = desktop.windows(active_only=True)
+		# if not active_windows:
+		# 	# This can happen when the Start Menu or Task Manager is open.
+		# 	self._logger.debug("No active windows.")
+		# 	return None
+		# active_window = active_windows[0]
 		assert active_window.is_active()
-		window_title = active_window.window_text()
+		# window_title = active_window.window_text()
+		active_window.element_info
+		window_title = active_window.element_info.name
+		# active_window.element_info.rich_text (but can  be the same as `name`)
 		self._logger.info("Active window title: \"%s\"", window_title)
+		assert isinstance(window_title, str), f"Expected a string for `window_title`, got `{type(window_title)}` instead."
+		# Some other info:
+		# [(p, getattr(active_window, p)()) for p in active_window.writable_props]
+		# TODO Get program name.
+
 		# TODO Get more information about the windows like text they're entering in input fields.
 		# TODO Figure more ways to get input elements.
 		input_elements = active_window.descendants(control_type='Edit')
-		for i in input_elements:
-			self._logger.info("Input element: %s", i)
+		# for i in input_elements:
+		# 	self._logger.info("Input element: %s", i)
 		result = WindowInfo(
                     title=window_title
                 )
