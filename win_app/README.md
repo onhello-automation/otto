@@ -65,7 +65,9 @@ python otto\main.py ${env:USERPROFILE}\otto\config.yaml
 ```
 
 # Linting
-The rules are configuration in [pyproject.toml](pyproject.toml).
+The rules are configured in [pyproject.toml](pyproject.toml).
+
+**TODO** Use yapf so that we can use tabs instead of spaces. Despite the configuration, `autopep8` still uses spaces on wrapped lines.
 
 To see the changes, run:
 ```shell

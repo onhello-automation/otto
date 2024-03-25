@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from logging import Logger
 from typing import Optional
+from psutil import Process
 
 from injector import inject
 from pywinauto.win32_hooks import Hook, KeyboardEvent, MouseEvent
@@ -62,22 +63,32 @@ class OttoListener:
 		active_window.element_info
 		window_title = active_window.element_info.name
 		# active_window.element_info.rich_text (but can  be the same as `name`)
-		self._logger.info("Active window title: \"%s\"", window_title)
 		assert isinstance(window_title, str), f"Expected a string for `window_title`, got `{type(window_title)}` instead."
+
+		process_id = active_window.element_info.process_id
+		assert isinstance(process_id, int), f"Expected an int for `process_id`, got `{type(process_id)}` instead."
+		process = Process(process_id)
+		process_name = process.name()
+		# full_path = process.exe()
+
+		self._logger.info("Active window title: \"%s\" (%s)",
+					window_title, process_name)
+		# active_window.process_id()
 		# Some other info:
 		# [(p, getattr(active_window, p)()) for p in active_window.writable_props]
 		# TODO Get program name.
 
 		# TODO Get more information about the windows like text they're entering in input fields.
 		# TODO Figure more ways to get input elements.
-		input_elements = active_window.descendants(control_type='Edit')
+		# input_elements = active_window.descendants(control_type='Edit')
 		# for i in input_elements:
 		# 	self._logger.info("Input element: %s", i)
 		result = WindowInfo(
-                    title=window_title
-                )
+					title=window_title,
+					process_name=process_name,
+				)
 
-		self._logger.debug("Active window: \"%s\"", result)
+		self._logger.debug("Active window: %s", result)
 
 		# Alternative way, but there are multiple `window_text`s in Windows Explorer.
 		# app = Application(backend='uia')
