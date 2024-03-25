@@ -11,6 +11,7 @@ import time
 import threading
 
 from otto.context.window import WindowInfo
+from otto.msteams.msteams_control import MicrosoftTeams
 
 
 @inject
@@ -37,7 +38,7 @@ class OttoListener:
                     # TODO
                     pass
             except Exception as e:
-                self._logger.error("Error: %s", e)
+                self._logger.exception("There was an error while trying to get the active window.", e)
                 break
 
             time.sleep(1)
@@ -87,6 +88,9 @@ class OttoListener:
             title=window_title,
             process_name=process_name,
         )
+
+        if process_name == 'msteams.exe':
+            messages = MicrosoftTeams.get_messages_from_window(active_window)
 
         self._logger.debug("Active window: %s", result)
 
