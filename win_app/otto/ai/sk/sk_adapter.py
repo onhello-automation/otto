@@ -15,6 +15,7 @@ from semantic_kernel.contents import StreamingTextContent
 from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
 from semantic_kernel.memory.semantic_text_memory import SemanticTextMemory
 from tqdm import tqdm
+from otto.ai.commander import Commander
 from otto.ai.sk.sk_config import SKConfig
 from otto.command import Command
 from otto.context.window import WindowInfo
@@ -34,18 +35,16 @@ QUESTION = "Tell me what sports I should do this weekend based on what I like to
 # https://github.com/microsoft/semantic-kernel/blob/main/python/tests/unit/connectors/ollama/services/test_ollama_chat_completion.py
 #
 
-# TODO Generalize with an interface so that other adapters can be made.
-
 
 @inject
 @dataclass
-class SemanticKernelAdapter:
+class SemanticKernelAdapter(Commander):
     _logger: Logger
     _sk_config: SKConfig
 
     _collection_name = 'generic'
-    _kernel: Optional[sk.Kernel] = None
-    _sk_function: Optional[sk.KernelFunction] = None
+    # _kernel: Optional[sk.Kernel] = None
+    # _sk_function: Optional[sk.KernelFunction] = None
 
     def __post_init__(self):
         self._logger.info("Initializing kernel and memory.")
@@ -75,7 +74,7 @@ class SemanticKernelAdapter:
             asyncio.run(memory.save_information(self._collection_name, mem, id=str(i)))
 
         prompt = self._sk_config.prompt
-        self._logger.debug("Prompt: \"%s\".", prompt)
+        self._logger.debug("Prompt:\n\"%s\"", prompt)
         self._sk_function = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt)
         self._kernel = kernel
 

@@ -1,15 +1,15 @@
+import threading
+import time
 from dataclasses import dataclass
 from logging import Logger
 from typing import Optional
-from psutil import Process
 
 from injector import inject
+from psutil import Process
+from pywinauto import Application, Desktop
 from pywinauto.win32_hooks import Hook, KeyboardEvent, MouseEvent
-from pywinauto import Application
-from pywinauto import Desktop
-import time
-import threading
 
+from otto.ai.commander import Commander
 from otto.context.window import WindowInfo
 from otto.msteams.msteams_control import MicrosoftTeams
 
@@ -18,13 +18,14 @@ from otto.msteams.msteams_control import MicrosoftTeams
 @dataclass
 class OttoListener:
     _logger: Logger
+    _commander: Commander
     _hook: Optional[Hook] = None
 
     def listen(self):
         # TODO Maybe make it something more obscure like Shift+Esc?
-        self._logger.info("Listening for events. Press Esc anytime with any window open to exit.")
-        self._hook = Hook()
-        self._hook.handler = self._keyboard_handler  # type: ignore
+        # self._logger.info("Listening for events. Press Esc anytime with any window open to exit.")
+        # self._hook = Hook()
+        # self._hook.handler = self._keyboard_handler  # type: ignore
 
         # Start hook in a new thread so that it doesn't block.
         # Was `self._hook.hook(keyboard=True)`.
@@ -36,8 +37,9 @@ class OttoListener:
                 # TODO Get titles for recently opened windows.
                 active_window = self._get_active_window_info()
                 if active_window is not None:
-                    # TODO
-                    pass
+                    command = self._commander.get_command(active_window)
+                    self._logger.info("Command: %s", command)
+                    # TODO Tell the user what the command is.
             except Exception as e:
                 self._logger.exception("There was an error while trying to get the active window.", e)
                 break
