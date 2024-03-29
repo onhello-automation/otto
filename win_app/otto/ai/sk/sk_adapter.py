@@ -1,9 +1,8 @@
+import asyncio
 import logging
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from logging import Logger
-from typing import Optional
-import asyncio
 
 import semantic_kernel as sk
 from injector import inject
@@ -15,6 +14,7 @@ from semantic_kernel.contents import StreamingTextContent
 from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
 from semantic_kernel.memory.semantic_text_memory import SemanticTextMemory
 from tqdm import tqdm
+
 from otto.ai.commander import Commander
 from otto.ai.sk.sk_config import SKConfig
 from otto.command import Command
@@ -42,9 +42,9 @@ class SemanticKernelAdapter(Commander):
     _logger: Logger
     _sk_config: SKConfig
 
-    _collection_name = 'generic'
-    # _kernel: Optional[sk.Kernel] = None
-    # _sk_function: Optional[sk.KernelFunction] = None
+    _collection_name: str = field(default='generic', init=False)
+    _kernel: sk.Kernel = field(init=False)
+    _sk_function: sk.KernelFunction = field(init=False)
 
     def __post_init__(self):
         self._logger.info("Initializing kernel and memory.")
@@ -82,8 +82,25 @@ class SemanticKernelAdapter(Commander):
         """
         Get a command to tell the user based on the active window.
         """
+        # TODO Pass the active window as context.
+        # TODO Stream the text back.
+        arguments = sk.KernelArguments(input=QUESTION)
+        arguments[TextMemoryPlugin.RELEVANCE_PARAM] = 0.5
+        self._logger.info("Invoking kernel. Response:")
+        is_logging_enabled = self._logger.isEnabledFor(logging.INFO)
+        command_text = ""
+        async for results in self._kernel.invoke_stream(self._sk_function, arguments=arguments):
+            for r in results:
+                assert isinstance(r, StreamingTextContent)
+                if r.text:
+                    if is_logging_enabled:
+                        print(r.text, end="")
+                        sys.stdout.flush()
+                    command_text += r.text
+        if is_logging_enabled:
+            print()
 
-        return Command("TODO")
+        return Command(command_text)
 
 
 async def main():

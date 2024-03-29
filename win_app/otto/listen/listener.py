@@ -1,3 +1,4 @@
+import asyncio
 import threading
 import time
 from dataclasses import dataclass
@@ -37,14 +38,14 @@ class OttoListener:
                 # TODO Get titles for recently opened windows.
                 active_window = self._get_active_window_info()
                 if active_window is not None:
-                    command = self._commander.get_command(active_window)
+                    command = asyncio.run(self._commander.get_command(active_window))
                     self._logger.info("Command: %s", command)
                     # TODO Tell the user what the command is.
             except Exception as e:
                 self._logger.exception("There was an error while trying to get the active window.", e)
                 break
 
-            time.sleep(1)
+            time.sleep(3)
 
         # thread.join()
 
