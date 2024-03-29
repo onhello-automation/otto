@@ -9,6 +9,8 @@ from pywinauto import Application, WindowSpecification
 
 
 class MicrosoftTeams:
+    process_name = 'msteams.exe'
+
     def __init__(self):
         self.app = Application(backend='uia') \
             .connect(title_re=r'.* \| Microsoft Teams$')

@@ -1,1 +1,13 @@
 log_level: DEBUG
+
+sk:
+  ai_model: 'phi'
+  embedding_model: 'nomic-embed-text'
+  memories:
+    - "I like vegan ice cream and pizza.",
+    - "I like to ski and bike.",
+    - "I like to watch sci-fi movies.",
+  prompt: |
+    Tell the user what they should do in one or two short sentences.\n
+    Context: {{recall $input}}
+    User: {{$input}}

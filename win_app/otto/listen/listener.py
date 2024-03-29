@@ -21,7 +21,7 @@ class OttoListener:
     _hook: Optional[Hook] = None
 
     def listen(self):
-        # TODO Maybe maybe it something more obscure like Shift+Esc?
+        # TODO Maybe make it something more obscure like Shift+Esc?
         self._logger.info("Listening for events. Press Esc anytime with any window open to exit.")
         self._hook = Hook()
         self._hook.handler = self._keyboard_handler  # type: ignore
@@ -33,6 +33,7 @@ class OttoListener:
 
         while True:
             try:
+                # TODO Get titles for recently opened windows.
                 active_window = self._get_active_window_info()
                 if active_window is not None:
                     # TODO
@@ -89,7 +90,7 @@ class OttoListener:
             process_name=process_name,
         )
 
-        if process_name == 'msteams.exe':
+        if process_name == MicrosoftTeams.process_name:
             messages = MicrosoftTeams.get_messages_from_window(active_window)
 
         self._logger.debug("Active window: %s", result)

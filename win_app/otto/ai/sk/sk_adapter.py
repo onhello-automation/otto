@@ -1,15 +1,23 @@
 import logging
 import sys
+from dataclasses import dataclass
+from logging import Logger
+from typing import Optional
+import asyncio
 
 import semantic_kernel as sk
+from injector import inject
 from semantic_kernel.connectors.ai.ollama.services.ollama_text_completion import \
     OllamaTextCompletion
 from semantic_kernel.connectors.ai.ollama.services.ollama_text_embedding import \
     OllamaTextEmbedding
+from semantic_kernel.contents import StreamingTextContent
 from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
 from semantic_kernel.memory.semantic_text_memory import SemanticTextMemory
-from semantic_kernel.contents import StreamingTextContent
-
+from tqdm import tqdm
+from otto.ai.sk.sk_config import SKConfig
+from otto.command import Command
+from otto.context.window import WindowInfo
 
 COLLECTION_NAME = 'generic'
 
@@ -25,6 +33,58 @@ QUESTION = "Tell me what sports I should do this weekend based on what I like to
 # See examples at
 # https://github.com/microsoft/semantic-kernel/blob/main/python/tests/unit/connectors/ollama/services/test_ollama_chat_completion.py
 #
+
+# TODO Generalize with an interface so that other adapters can be made.
+
+
+@inject
+@dataclass
+class SemanticKernelAdapter:
+    _logger: Logger
+    _sk_config: SKConfig
+
+    _collection_name = 'generic'
+    _kernel: Optional[sk.Kernel] = None
+    _sk_function: Optional[sk.KernelFunction] = None
+
+    def __post_init__(self):
+        self._logger.info("Initializing kernel and memory.")
+        kernel = sk.Kernel()
+
+        service_id = 'ollama_text_completion'
+        ai_model = self._sk_config.ai_model
+        text_service = OllamaTextCompletion(ai_model_id=ai_model, service_id=service_id)
+        kernel.add_service(text_service)
+
+        embedding_model = self._sk_config.embedding_model
+        embedding_service = OllamaTextEmbedding(ai_model_id=embedding_model, service_id='ollama_text_embedding')
+        kernel.add_service(embedding_service)
+
+        # Following https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/06-memory-and-embeddings.ipynb
+        memory = SemanticTextMemory(storage=sk.memory.VolatileMemoryStore(), embeddings_generator=embedding_service)
+        memory_plugin = TextMemoryPlugin(memory)
+        kernel.import_plugin_from_object(memory_plugin, "TextMemoryPlugin")
+
+        memories = self._sk_config.memories
+
+        self._logger.debug("Saving memories.")
+        for i, mem in enumerate(tqdm(memories,
+                                desc="Saving memories",
+                                unit="memory",
+                                     )):
+            asyncio.run(memory.save_information(self._collection_name, mem, id=str(i)))
+
+        prompt = self._sk_config.prompt
+        self._logger.debug("Prompt: \"%s\".", prompt)
+        self._sk_function = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt)
+        self._kernel = kernel
+
+    async def get_command(self, active_window: WindowInfo) -> Command:
+        """
+        Get a command to tell the user based on the active window.
+        """
+
+        return Command("TODO")
 
 
 async def main():
@@ -72,7 +132,7 @@ Tell the user what they should do in one or two short sentences.
 Context: {{recall $input}}
 
 User: {{$input}}
-""".strip()
+""".lstrip()
 
     command = kernel.create_function_from_prompt('otto', 'otto', "Tell user what to do.", prompt)
 
@@ -88,5 +148,4 @@ User: {{$input}}
 
 
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(main())

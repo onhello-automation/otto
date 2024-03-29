@@ -4,7 +4,8 @@ from dacite import from_dict
 from injector import Module, provider, singleton
 from yaml import safe_load
 
-from .config import Config
+from otto.ai.sk import SKConfig
+from otto.configuration import Config
 
 
 class ConfigModule(Module):
@@ -23,3 +24,8 @@ class ConfigModule(Module):
             logger.setLevel(result.log_level)
 
         return result
+
+    @provider
+    @singleton
+    def provide_sk_config(self, config: Config) -> SKConfig:
+        return config.sk
