@@ -30,7 +30,7 @@ class SemanticKernelAdapter(Commander):
     _logger: Logger
     _sk_config: SKConfig
 
-    _collection_name: str = field(default='generic', init=False)
+    _fact_collection_name: str = field(default='facts', init=False)
     _kernel: sk.Kernel = field(init=False)
     _sk_function: sk.KernelFunction = field(init=False)
 
@@ -59,7 +59,7 @@ class SemanticKernelAdapter(Commander):
                                       desc="Saving knowledge",
                                       unit="fact",
                                       )):
-            asyncio.run(memory.save_information(self._collection_name, fact, id=str(i)))
+            asyncio.run(memory.save_information(self._fact_collection_name, fact, id=str(i)))
 
         prompt = self._sk_config.prompt
         self._logger.debug("Prompt:\n\"%s\"", prompt)
@@ -75,6 +75,7 @@ class SemanticKernelAdapter(Commander):
         arguments = sk.KernelArguments(
             active_window_process_name=active_window.process_name,
             active_window_title=active_window.title,
+            fact_collection=self._fact_collection_name,
         )
         arguments[TextMemoryPlugin.RELEVANCE_PARAM] = 0.5
         self._logger.info("Invoking kernel. Response:")

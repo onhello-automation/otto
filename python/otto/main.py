@@ -15,6 +15,7 @@ def main():
         LoggingModule,
         SKModule,
     ])
+
     listener = inj.get(OttoListener)
     listener.listen()
 
