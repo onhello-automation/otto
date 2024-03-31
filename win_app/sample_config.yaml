@@ -1,13 +1,20 @@
 log_level: DEBUG
+global_log_level: DEBUG
 
 sk:
   ai_model: 'phi'
   embedding_model: 'nomic-embed-text'
-  memories:
-    - "I like vegan ice cream and pizza."
-    - "I like to ski and bike."
-    - "I like to watch sci-fi movies."
+  knowledge:
+    - "Semantic Kernel is useful for working with LLMs."
+    - "Ollama is a great tool to run LLMs on your device."
+
+  # TODO Support loading the prompt from a file.
   prompt: |
-    Tell the user what they should do in one or two short sentences.
-    Context: {{recall $input}}
-    User: {{$input}}
+    Someone is using a PC
+    Open window title: {{$active_window_title}}
+    Process name: {{$active_window_process_name}}
+    Related fact: {{recall $active_window_title}}
+    Tell them what they should work on in one or two short sentences.
+    Give them creative ideas for how to finish their task or give them a new problem to solve.
+
+

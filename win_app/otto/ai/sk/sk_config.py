@@ -6,5 +6,5 @@ from typing import Collection
 class SKConfig:
     ai_model: str
     embedding_model: str
-    memories: Collection[str]
+    knowledge: Collection[str]
     prompt: str

@@ -1,3 +1,4 @@
+import logging
 from logging import Logger
 
 from dacite import from_dict
@@ -22,6 +23,9 @@ class ConfigModule(Module):
 
         if result.log_level is not None:
             logger.setLevel(result.log_level)
+
+        if result.global_log_level is not None:
+            logging.basicConfig(level=result.global_log_level)
 
         return result
 
