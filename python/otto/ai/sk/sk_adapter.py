@@ -70,7 +70,7 @@ class SemanticKernelAdapter(Commander):
         """
         Get a command to tell the user based on the active window.
         """
-        # TODO Pass the active window as context.
+        # TODO Pass text from the active window as context.
         # TODO Stream the text back.
         arguments = sk.KernelArguments(
             active_window_process_name=active_window.process_name,

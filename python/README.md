@@ -6,10 +6,12 @@ It might work on Linux too.
 
 # Plans
 ## RAG
+- ✅ Support providing some strings of facts in a configuration file.
 - Support providing a folder of documents for context.
 
 ## Decision Making
-- Use LLM to decide what to do. Start with Ollama + SK. Make a generic connector interface so that other options can be used too.
+- ✅ Use LLM to decide what to do. Start with Ollama + SK.
+- Make a generic connector interface so that other options can be used too.
 
 ## Actions
 ### Teams

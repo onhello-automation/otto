@@ -1,5 +1,6 @@
-from chat.message import ChatMessage
 from pywinauto import Application, WindowSpecification
+
+from otto.chat.message import ChatMessage
 
 # Some examples that might be helpful:
 # General stuff about pywinauto: https://pywinauto.readthedocs.io/en/latest/getting_started.html
@@ -13,7 +14,7 @@ class MicrosoftTeams:
 
     def __init__(self):
         self.app = Application(backend='uia') \
-            .connect(title_re=r'.* \| Microsoft Teams$')
+            .connect(title_re=r'^[^|]* \| [^|]* \| Microsoft Teams$')
 
     def get_messages(self) -> list[ChatMessage]:
         # Get the latest version of the window.
@@ -36,6 +37,7 @@ class MicrosoftTeams:
         print(messages.window_text())
         print(messages.title)
         print(messages.title())
+        # messages.print_control_identifiers()
         raise NotImplementedError("Not implemented yet.")
 
     def type_message(self, message: str, send_message=False) -> None:
