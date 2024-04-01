@@ -25,6 +25,9 @@ It might work on Linux too.
 # Setup
 See the steps below to setup this project.
 
+## Install Ollama
+See https://ollama.com/download
+
 ## Setup Python
 Use Python 3.11.
 Example:
