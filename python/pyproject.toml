@@ -6,8 +6,27 @@ authors = ["Justin D. Harris <juharris@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+# Strict python version to work with 'semantic-kernel' which requires '>=3.8,<3.13'.
+python = ">=3.11,<3.13"
+dacite = "^1.8.1"
+injector = "^0.21.0"
+pywinauto = "^0.6.8"
+pyyaml = "^6.0.1"
+semantic-kernel = "^0.9.4b1"
+tqdm = "^4.66.2"
+plyer = "^2.1.0"
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.1.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.autopep8]
+max_line_length = 140
+# Indent using 4 spaces because it's hard to get autopep8 to use tabs.
+# Even with ignoring W191, it still indents with spaces when wrapping lines.
+indent_size = 4
+recursive = true
+aggressive = 3

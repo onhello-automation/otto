@@ -1,0 +1,13 @@
+[*.py]
+indent_size = 4
+indent_style = space
+trim_trailing_whitespace = true
+
+[*.json]
+indent_style = tab
+trim_trailing_whitespace = true
+
+[*.yaml]
+indent_size = 4
+indent_style = space
+trim_trailing_whitespace = true

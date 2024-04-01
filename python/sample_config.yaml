@@ -1,0 +1,23 @@
+log_level: DEBUG
+global_log_level: DEBUG
+
+sk:
+  ai_model: 'phi'
+  embedding_model: 'nomic-embed-text'
+  knowledge:
+    - "Semantic Kernel is useful for working with LLMs."
+    - "Ollama is a great tool to run LLMs on your device."
+
+  # TODO Support loading the prompt from a file.
+  # Use `import_plugin_from_prompt_directory`.
+  # See https://github.com/microsoft/semantic-kernel/blob/main/python/notebooks/02-running-prompts-from-file.ipynb
+  prompt: |
+    # Context
+    Someone is using a PC
+    Open window title: {{$active_window_title}}
+    Process name: {{$active_window_process_name}}
+    Related Fact: {{recall $active_window_title collection=$fact_collection}}
+
+    # Instructions
+    Tell them what they should work on in one or two short sentences.
+    Give them creative ideas for how to finish their task or give them a new problem to solve.
