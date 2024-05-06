@@ -1,0 +1,46 @@
+name: "Test"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+
+    # We need to use Windows for pywin32.
+    runs-on: windows-latest
+
+    # TODO Look into caching: https://github.com/marketplace/actions/install-poetry-action
+    steps:
+    - uses: actions/checkout@v4
+    - name: "Set up Python 3.11"
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    - name: "Poetry: Install and configure"
+      uses: snok/install-poetry@v1.3.4
+      with:
+        version: 1.8.2
+    - name: "Install dependencies"
+      run: |
+        poetry install
+      working-directory: python
+    - name: "pytest"
+      run: |
+        poetry run pytest
+      working-directory: python
+    - name: "Check Code"
+      run: |
+        poetry run autopep8 --jobs 0 --exit-code --diff .
+      working-directory: python

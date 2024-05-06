@@ -35,5 +35,5 @@ if __name__ == '__main__':
     # thread.start()
     n = Notifier()
     n.notify("Tell them: .", display_seconds=4)
-   
+
     # thread.join()
