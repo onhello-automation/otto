@@ -1,4 +1,4 @@
-name: Test
+name: "Test"
 
 on:
   push:
@@ -21,24 +21,24 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v3
+    - uses: actions/checkout@v4
+    - name: "Set up Python 3.11"
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11"
-    - name: Install and configure Poetry
-      uses: snok/install-poetry@v1
+    - name: "Poetry: Install and configure"
+      uses: snok/install-poetry@v1.3.4
       with:
         version: 1.8.2
-    - name: Install dependencies
+    - name: "Install dependencies"
       run: |
         poetry install
       working-directory: python
-    - name: Test with pytest
+    - name: "pytest"
       run: |
         poetry run pytest
       working-directory: python
-    - name: Check Code
+    - name: "Check Code"
       run: |
         poetry run autopep8 --jobs 0 --exit-code --diff .
       working-directory: python
