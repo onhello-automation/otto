@@ -69,6 +69,13 @@ $env:PYTHONPATH="${PWD};${env:PYTHONPATH}"
 python otto\main.py ${env:USERPROFILE}\otto\config.yaml
 ```
 
+# Testing
+Run the automated tests:
+
+```shell
+pytest
+```
+
 # Linting
 The rules are configured in [pyproject.toml](pyproject.toml).
 
