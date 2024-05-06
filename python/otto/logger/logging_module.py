@@ -1,7 +1,6 @@
 import logging
 import os
 from logging import Logger
-from typing import Optional, Union
 
 from injector import Module, provider, singleton
 

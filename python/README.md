@@ -76,7 +76,7 @@ The rules are configured in [pyproject.toml](pyproject.toml).
 
 To see the changes, run:
 ```shell
-autopep8 --jobs 0 --exit-code .
+autopep8 --jobs 0 --exit-code --diff .
 ```
 
 To make the changes automatically, run:
