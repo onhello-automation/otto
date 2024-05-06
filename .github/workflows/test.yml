@@ -27,7 +27,9 @@ jobs:
         set -ex
         python -m pip install --upgrade pip
         curl -sSL https://install.python-poetry.org | python - --version 1.8.2
+
         poetry install
+      working-directory: python
     - name: Test with pytest
       run: |
         poetry run pytest
