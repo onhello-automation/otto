@@ -18,8 +18,10 @@ defaults:
 jobs:
   build:
 
+    # We need to use Windows for pywin32.
     runs-on: windows-latest
 
+    # TODO Look into caching: https://github.com/marketplace/actions/install-poetry-action
     steps:
     - uses: actions/checkout@v4
     - name: "Set up Python 3.11"
