@@ -24,9 +24,8 @@ jobs:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        set -ex
         python -m pip install --upgrade pip
-        curl -sSL https://install.python-poetry.org | python - --version 1.8.2
+        (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py - --version 1.8.2
 
         poetry install
       working-directory: python
