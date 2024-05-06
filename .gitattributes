@@ -1,4 +1,4 @@
-*.editorconfig text eol=lf
+.editorconfig text eol=lf
 .gitattributes text eol=lf
 .gitignore text eol=lf
 
