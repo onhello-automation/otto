@@ -1,4 +1,4 @@
-# otto
+# Otto
 Help AI control your PC.
 
 This might only work on Windows because we use `pywinauto` to control applications.
@@ -71,8 +71,6 @@ python otto\main.py ${env:USERPROFILE}\otto\config.yaml
 
 # Linting
 The rules are configured in [pyproject.toml](pyproject.toml).
-
-**TODO** Use yapf so that we can use tabs instead of spaces. Despite the configuration, `autopep8` still uses spaces on wrapped lines.
 
 To see the changes, run:
 ```shell
